@@ -2,3 +2,4 @@
 *.db
 .ipynb_checkpoints/*
 envs/*
+models/.ipynb_checkpoints/*
