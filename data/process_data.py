@@ -26,6 +26,7 @@ def clean_data(df):
 
     df.drop(columns=['categories'], inplace=True)
     df = pd.concat([df, categories], axis=1)
+    df.loc[df['related']==2, 'related'] = 1 # force 2 to equal the same as a 1
     df.drop(df.loc[df.duplicated()].index, inplace=True)
 
     return df
