@@ -7,3 +7,5 @@ data/.ipynb_checkpoints/*
 ml.ipynb
 *.pkl
 train_classifier-full.py
+visuals.ipynb
+app/templates/.ipynb_checkpoints/*
