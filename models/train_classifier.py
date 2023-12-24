@@ -32,6 +32,17 @@ stop_words = set(stopwords.words('english'))
 pattern = re.compile(r'[^a-zA-Z0-9]')
 
 def load_data(database_filepath):
+    '''
+      Read a database file into a dataframe and create X and Y varibles along with category 
+      names that will be used in training.
+
+            Parameters:
+                    database_filepath: a string with the filepath to a local database file.
+            Returns:
+                    X: an X matrix that can be used for machine learning
+                    Y: a Y matrix of target variables that can be used for machine learning
+                    category_names: a list of Y variables column names.
+    '''
     db = database_filepath.split('/')[-1]
     engine = create_engine(f'sqlite:///{database_filepath}')
     df = pd.read_sql_table(db, engine)
@@ -43,6 +54,18 @@ def load_data(database_filepath):
     
 
 def tokenize(text):
+    '''
+      A custom text tokenizer to be used as the tokeinzer in an sklearn CountVectorizer object.
+      It takes in a text string and removes any character that is not a number or letter,
+      creates a token for each word, and then lemmatizes the tokens and finally removes any 
+      stop words.  The lower case function is handled inside the CountVectorizer itself in 
+      the build_model function (via lowercase=True).
+
+            Parameters:
+                    text: A string sentence to be tokenized.
+            Returns:
+                    tokens: a list containing the tokens.
+    '''
     text = pattern.sub(' ', text)
     tokens = word_tokenize(text)
     tokens = [lemmatizer.lemmatize(w, pos='v') for w in tokens if w not in stop_words]    
@@ -50,6 +73,15 @@ def tokenize(text):
     return tokens
 
 def build_model():
+    '''
+      Construct a scikit-learn pipeline classification model that can be used for training.
+      Also build a custom scorer and the parameter grid to be searched over in order to tune
+      the hyper-parameters.
+            Parameters:
+                    none
+            Returns:
+                    cv: An sklearn classification model
+        '''
     
     # define pipeline
     pipeline = Pipeline([
@@ -140,21 +172,30 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    '''
+      Save a trained scikit-learn classification model as a pickle file that can be used later.
+
+            Parameters:
+                    model: a trained sklearn classification model to be saved.
+                    model_filepath: string of filepath for location to save the model.
+
+            Returns:
+                    nothing, but the file is saved.
+    '''
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
 def main():
+    '''
+      This is the main function that runs all the code based on the inputs in the command line.
+      Should be of the form similar to:
+      python ./models/train_classifier.py ./data/DisasterResponse.db classifier.pkl
+    '''
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
-
-
-        
-        
-        
-
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)   
         
         print('Building model...')
         model = build_model()
