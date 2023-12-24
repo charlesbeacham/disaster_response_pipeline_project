@@ -14,6 +14,15 @@ def load_data(messages_filepath, categories_filepath):
     return df
 
 def clean_data(df):
+    '''
+      Takes in the raw merged message and category data and returns a dataframe that 
+      can be used for machine learning.  The categories are split into columns so that
+      each category can be trained independently. 
+            Parameters:
+                    df: pandas dataframe to be cleaned
+            Returns:
+                    df: cleaned dataframe to be used for machine learning
+    '''
     categories = df['categories'].str.split(';', expand=True)
     category_colnames = list(categories.iloc[0].apply(lambda x: x[:-2]))
     categories.columns = category_colnames
@@ -32,11 +41,24 @@ def clean_data(df):
     return df
 
 def save_data(df, database_filename):
+    '''
+      Takes the cleaned dataframe and saves it to a local database file.
+            Parameters:
+                    df: pandas dataframe
+                    database_filename: string filepath for where to store database
+            Returns:
+                    nothing but database is saved
+    '''
     engine = create_engine(f'sqlite:///{database_filename}')
     df.to_sql(database_filename, engine, index=False)  
 
 
 def main():
+    '''
+      This is the main function that runs all the code based on the inputs in the command line.
+      Should be of the form similar to:
+      python ./data/process_data.py ./data/disaster_messages.csv ./data/disaster_categories.csv ./data/DisasterResponse.db 
+    '''
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
