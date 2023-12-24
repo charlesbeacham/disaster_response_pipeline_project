@@ -23,7 +23,7 @@ def clean_data(df):
             Returns:
                     df: cleaned dataframe to be used for machine learning
     '''
-    categories = df['categories'].str.split(';', expand=True)
+    categories = df['categories'].str.split(';', expand=True) # expand the categories into columns
     category_colnames = list(categories.iloc[0].apply(lambda x: x[:-2]))
     categories.columns = category_colnames
     for column in categories:
@@ -33,10 +33,10 @@ def clean_data(df):
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
 
-    df.drop(columns=['categories'], inplace=True)
-    df = pd.concat([df, categories], axis=1)
+    df.drop(columns=['categories'], inplace=True) # no longer needed as there is now 1 column per category
+    df = pd.concat([df, categories], axis=1) # join in the created new category columns
     df.loc[df['related']==2, 'related'] = 1 # force 2 to equal the same as a 1
-    df.drop(df.loc[df.duplicated()].index, inplace=True)
+    df.drop(df.loc[df.duplicated()].index, inplace=True) # remove duplicates
 
     return df
 
@@ -50,7 +50,7 @@ def save_data(df, database_filename):
                     nothing but database is saved
     '''
     engine = create_engine(f'sqlite:///{database_filename}')
-    df.to_sql(database_filename, engine, index=False)  
+    df.to_sql(database_filename, engine, index=False)  # save data to specified location
 
 
 def main():

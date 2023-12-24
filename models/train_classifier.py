@@ -45,7 +45,9 @@ def load_data(database_filepath):
     '''
     db = database_filepath.split('/')[-1]
     engine = create_engine(f'sqlite:///{database_filepath}')
-    df = pd.read_sql_table(db, engine)
+    df = pd.read_sql_table(db, engine) # read cleaned data into dataframe
+
+    # split data into an X and Y variable
     X = df['message']
     Y = df.drop(columns=['id', 'message', 'original', 'genre'])
     category_names = Y.columns.to_list()
@@ -66,8 +68,10 @@ def tokenize(text):
             Returns:
                     tokens: a list containing the tokens.
     '''
-    text = pattern.sub(' ', text)
-    tokens = word_tokenize(text)
+    text = pattern.sub(' ', text) # remove any character not a letter or number
+    tokens = word_tokenize(text) # create a list of word tokents
+
+    # remove stop words and lemmatize each word
     tokens = [lemmatizer.lemmatize(w, pos='v') for w in tokens if w not in stop_words]    
 
     return tokens
@@ -147,11 +151,13 @@ def evaluate_model(model, X_test, Y_test, category_names):
     # code below will print the precision, recall, and f1_score for each target
     pred = pd.DataFrame(model.predict(X_test))
     target_names = category_names
-    
+
+    # enumerate over each category to print the information from sklearn's classification report
     for i, col in enumerate(Y_test):
         print(f'-------{target_names[i]}-{i}-------\n')
         measure_dict = classification_report(Y_test[col], pred[i], output_dict=True)
-    
+        
+    # print the value if it exists for predicting 1.  If there are no 1 values, return 0 to prevent an error.
         try:
             precision = measure_dict['1']['precision']
         except:
@@ -182,7 +188,7 @@ def save_model(model, model_filepath):
             Returns:
                     nothing, but the file is saved.
     '''
-    pickle.dump(model, open(model_filepath, 'wb'))
+    pickle.dump(model, open(model_filepath, 'wb')) # save the trained model
 
 
 def main():
