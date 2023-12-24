@@ -86,6 +86,22 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    '''
+      Print the measurement values of the test data.  Both the macro-averaged values and
+      the precision, recall, and f1_score by each target category.
+
+            Parameters:
+                    model: a trained sklearn classification model
+                    X_test: an array of the X-matrix created with train_test_split used for making prediction
+                    Y_test: an array of the true answers to compare against the X_test.
+                    category_names: a list of the target variable names
+
+            Returns:
+                    nothing, but prints the results to the command line.
+    '''
+    
+
+    # print the macro-averaged accuracy, precision, and recall
     multi_accuracy = make_scorer(accuracy_score)
     multi_precision = make_scorer(precision_score, average='macro', zero_division=0)
     multi_recall = make_scorer(recall_score, average='macro', zero_division=0)
@@ -95,6 +111,32 @@ def evaluate_model(model, X_test, Y_test, category_names):
     recall = multi_recall(model, X_test, Y_test)
     
     print(f'macro-averaged accuracy: {accuracy:.2f} -- macro-averaged precision: {precision:.2f} -- macro-averaged recall: {recall:.2f}')
+
+    # code below will print the precision, recall, and f1_score for each target
+    pred = pd.DataFrame(model.predict(X_test))
+    target_names = category_names
+    
+    for i, col in enumerate(Y_test):
+        print(f'-------{target_names[i]}-{i}-------\n')
+        measure_dict = classification_report(Y_test[col], pred[i], output_dict=True)
+    
+        try:
+            precision = measure_dict['1']['precision']
+        except:
+            precision = 0.
+    
+        try:
+            recall = measure_dict['1']['recall']
+        except:
+            recall = 0.
+    
+        try:
+            f1_score = measure_dict['1']['f1-score']
+        except:
+            f1_score = 0.
+            
+    
+        print(f'precision: {precision:0.2}    recall: {recall:0.2}    f1-score: {f1_score:0.2}')
 
 
 def save_model(model, model_filepath):
