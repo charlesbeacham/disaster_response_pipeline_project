@@ -17,7 +17,7 @@ Use text messages sent during natural disasters to train a machine learning mode
 
 See spec-file.txt for full list of packages used.  The package manager used was Anaconda and coded in Python 3.11.7.  THe main packages used were pandas, sci-kit learn, and flask.
 
-You can use the spec-file to create an exact anaconda virtual environment with the command "conda create --name myenv --file spec-file.txt"
+You can use the spec-file to create an exact anaconda virtual environment with the command `conda create --name myenv --file spec-file.txt`
 
 ## Instructions <a name="instructions"></a>
 1. Run the following commands in the project's root directory to set up your database and model.
@@ -49,7 +49,7 @@ All of this is done via interacting with the command line.  See instructions bel
 - data/process_data.py - python script that takes the raw csv data and saves the cleansed data in a local database file.
 - models/train_classifier.py - python script that reads the cleansed dataframe from the local database and returns a fully trained classification model which is saved as a pickle (.pkl) file
 - app/run.py - python script that loads the flask web app
-- spec-file.txt - explicit list of packages used to create the virtual environment.  Created with "conda list --explicit > spec-file.txt"
+- spec-file.txt - explicit list of packages used to create the virtual environment.  Created with `conda list --explicit > spec-file.txt`
 - ETL Pipeline Preparation.ipynb - notebook used as interim step when creating process_data.py.  Not needed for main analysis.
 - ML Pipeline Preparation.ipynb - notebook used as interim step when creating train_classifier.py.  Not needed for main analysis.
 
