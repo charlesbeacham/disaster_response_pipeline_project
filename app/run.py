@@ -8,9 +8,11 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
+import plotly.express as px
 #from sklearn.externals import joblib
 import joblib
 from sqlalchemy import create_engine
+
 
 
 app = Flask(__name__)
@@ -46,26 +48,37 @@ def index():
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
-    graphs = [
-        {
-            'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
-                )
-            ],
+    # Question 1: what are the counts for each category?
+    values = df.drop(columns=['id', 'message', 'original', 'genre']) # create df of only values
+    values = values.loc[values['related']==1].drop(columns=['related']) # only look at related messages and drop related
+    value_sum = values.sum() # sum to get counts for each category
+    fig_1 = px.bar(value_sum, x=value_sum.index, y=value_sum.values,
+                  title="Count of Messages by Category",
+                  template="simple_white",
+            
+            )
 
-            'layout': {
-                'title': 'Distribution of Message Genres',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Genre"
-                }
-            }
-        }
-    ]
+    fig_1.update_layout(xaxis_title="Category", yaxis_title="Count")
+    fig_1.update_xaxes(tickangle=-90)
+
+    # for earthquakes, what categories are most correlated?
+    earthquake = values.loc[values['earthquake']==1]
+    earthquake_sum = earthquake.sum().sort_values(ascending=False).drop('earthquake')
+    
+    fig_2 = px.bar(earthquake_sum, x=earthquake_sum.index, y=earthquake_sum.values,
+                   title="Most Common Message Categories Related to Earthquakes",
+                   template="simple_white",
+                
+                )
+    
+    fig_2.update_layout(xaxis_title="Category", yaxis_title="Count")
+    fig_2.update_xaxes(tickangle=-90)
+
+        
+    
+
+    
+    graphs = [fig_1, fig_2]
     
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
