@@ -50,7 +50,7 @@ def save_data(df, database_filename):
                     nothing but database is saved
     '''
     engine = create_engine(f'sqlite:///{database_filename}')
-    df.to_sql(database_filename, engine, index=False)  # save data to specified location
+    df.to_sql(database_filename, engine, index=False, if_exists='replace')  # save data to specified location
 
 
 def main():
