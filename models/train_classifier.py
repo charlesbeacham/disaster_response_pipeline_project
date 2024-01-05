@@ -113,7 +113,7 @@ def build_model():
                       error_score='raise',
                       return_train_score=False,
                       n_jobs=-1,
-                      n_iter=25,
+                      n_iter=5,
                       scoring=multi_fbeta,
                       random_state=41,
                      )
