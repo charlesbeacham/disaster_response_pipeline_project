@@ -43,9 +43,9 @@ def load_data(database_filepath):
                     Y: a Y matrix of target variables that can be used for machine learning
                     category_names: a list of Y variables column names.
     '''
-    db = database_filepath.split('/')[-1]
+    
     engine = create_engine(f'sqlite:///{database_filepath}')
-    df = pd.read_sql_table(db, engine) # read cleaned data into dataframe
+    df = pd.read_sql_table(database_filepath, engine) # read cleaned data into dataframe
 
     # split data into an X and Y variable
     X = df['message']
