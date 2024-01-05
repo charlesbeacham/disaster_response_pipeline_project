@@ -30,7 +30,7 @@ You can use the spec-file to create an exact anaconda virtual environment with t
 2. Run the following command in the app's directory to run your web app.
     `python app/run.py`
 
-3. Go to http://127.0.0.1:3001/
+3. Go to http://127.0.0.1:3001/ or the local host link as directed by the command prompt.
 
 
 ## Project Motivation<a name="motivation"></a>
